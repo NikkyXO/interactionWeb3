@@ -4,6 +4,13 @@ pragma solidity ^0.8.24;
 pragma solidity ^0.8.0;
 
 contract PseudoRandomGenerator {
+
+    constructor(uint256 _winningPosition, uint256 _totalSquaresNumber) {
+        winningPosition = _winningPosition;
+        totalSquaresNumber = _totalSquaresNumber;
+
+    }
+    
     struct Player {
         uint256 position;
         bool isActive;  
@@ -11,8 +18,8 @@ contract PseudoRandomGenerator {
     }
 
     // state variables
-    uint256 public TotalSquaresNumber = 23; 
-    uint256 public  winningPosition = TotalSquaresNumber; 
+    uint256 public totalSquaresNumber; 
+    uint256 public  winningPosition; 
     address[] public players;
     uint256 public currentPlayerIndex;
 
@@ -31,6 +38,17 @@ contract PseudoRandomGenerator {
         _;
     }
 
+    function setWinningPosition() external {
+        require(!playerInfo[msg.sender].isActive, "Player already registered");
+        players.push(msg.sender);
+        playerInfo[msg.sender] = Player({
+            position: 1,
+            isActive: true,
+            isRegistered: true
+        });
+        emit PlayerAddedSuccessfully();
+    }
+
     function addPlayer() external {
         require(!playerInfo[msg.sender].isActive, "Player already registered");
         players.push(msg.sender);
@@ -47,24 +65,24 @@ contract PseudoRandomGenerator {
 
         uint256 rolledValue = (uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender))) % 6) + 1;
 
-        _movePlayer(msg.sender, rolledValue);
+        movePlayer(msg.sender, rolledValue);
 
         emit DiceRolledSuccessfully(msg.sender, rolledValue);
 
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
     }
 
-    function _movePlayer(address player, uint256 rolledValue) internal {
-        Player storage p = playerInfo[player];
+    function movePlayer(address _player, uint256 rolledValue) internal {
+        Player storage player = playerInfo[_player];
 
-        uint256 newPosition = p.position + rolledValue;
+        uint256 newPosition = player.position + rolledValue;
         if (newPosition >= winningPosition) {
-            p.position = winningPosition;
-            emit PlayerMovedSuccessfully(player, p.position);
-            emit GameWon(player);
+            player.position = winningPosition;
+            emit PlayerMovedSuccessfully(_player, player.position);
+            emit GameWon(_player);
         } else {
-            p.position = newPosition;
-            emit PlayerMovedSuccessfully(player, p.position);
+            player.position = newPosition;
+            emit PlayerMovedSuccessfully(_player, player.position);
         }
     }
 
