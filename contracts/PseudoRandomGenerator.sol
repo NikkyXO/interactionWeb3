@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.24;
 
-pragma solidity ^0.8.0;
-
 contract PseudoRandomGenerator {
 
     constructor(uint256 _winningPosition, uint256 _totalSquaresNumber) {
