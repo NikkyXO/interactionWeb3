@@ -1,0 +1,11 @@
+Write a script that interacts with at least two functions on the 
+UniswapV2 Router contract excluding the ones used in class. 
+Take a screenshot of your interaction logs in your terminal and put 
+it inside a folder you will create named screenshot in your project directory.
+*
+
+
+Write a contract that uses a pseudorandom generator to play ludo. Basically, 
+implement a simple version of the ludo map and also focus mainly on the 
+dice throwing algorithm. There is no strict design to this. 
+You can use any design method you want.
